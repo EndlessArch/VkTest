@@ -15,7 +15,9 @@ cGLFWHelper::~cGLFWHelper() {
     this->m_FlagInitDeinit = false;
 
     DBG_LOG("Terminated GLFW.");
+    return;
   }
+  DBG_LOG("GLFW already terminated.");
 }
 
 void cGLFWHelper::init() {

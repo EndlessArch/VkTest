@@ -12,7 +12,7 @@ void handleVKResult(const VkResult & p_Result, const char * p_FailedMsg) {
   return;
 }
 
-void handleVKResult(const VkResult & p_Result, const char * p_FailedMsg, const char * p_SuccessMsg) {
+void handleVKResult(const VkResult & p_Result, const char * p_SuccessMsg, const char * p_FailedMsg) {
   if(p_Result) {
     std::cerr << "[VKExceptionHandler]: " << p_FailedMsg << std::endl;
     return;

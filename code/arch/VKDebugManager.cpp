@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#define handleCallback(p_CallbackResult)  if(!p_CallbackResult) { \
-                                            std::cerr << "Failed to initialize " << #p_CallbackResult << ".\nAborting..." << std::endl; \
-                                            abort();\
-                                          }
+// #define handleCallback(p_CallbackResult)  if(!p_CallbackResult) { \
+//                                             std::cerr << "Failed to initialize " << #p_CallbackResult << ".\nAborting..." << std::endl; \
+//                                             abort();\
+//                                           }
 
 static uint32_t __vkDbgCb_err_cnt = 0;
 
