@@ -25,8 +25,8 @@ cVKInstanceManager::cVKInstanceManager(VkInstanceCreateInfo & p_InstcInfo) {
 	handleVKResult(res, "Failed to create Vulkan instance object.", "Created Vulkan instance object.");
 #ifndef NDEBUG
 		res = this->m_DbgManager.createDebugUtilsMessengerExt((const VkInstance &)this->m_Instance,
-																													(const VkDebugUtilsMessengerCreateInfoEXT *)&dbgCreateInfo,
-																													(const VkAllocationCallbacks *)nullptr);
+																				(const VkDebugUtilsMessengerCreateInfoEXT *)&dbgCreateInfo,
+																				(const VkAllocationCallbacks *)nullptr);
 		handleVKResult(res, "Failed to create Vulkan debug messenger.", "Created Vulkan debug messenger.");
 #endif
 }
@@ -67,18 +67,9 @@ bool cVKInstanceManager::checkValidationLayers(const std::vector<const char *> &
 
 	ListChecker lyrChecker;
 	lyrChecker( availableLayers, validationLayers,
-							std::move([](const VkLayerProperties & p_t2) -> const char * {
-								return p_t2.layerName;
-							}));
-
-	// bool resultFlag = true, totalFlag;
-	// for(const char * const validationLyr : validationLayers) {
-	//   totalFlag = false;
-	//   if(std::any_of(availableLayers.begin(), availableLayers.end(), [&validationLyr](const VkLayerProperties & p_LyrPrp) -> bool {
-	//     return !strcmp(validationLyr, p_LyrPrp.layerName); // ==
-	//   })) totalFlag = true;
-	//   resultFlag &= totalFlag;
-	// }
+               std::move([](const VkLayerProperties & p_t2) -> const char * {
+                  return p_t2.layerName;
+               }));
 
 	std::cerr << "Found " << availableLayerCnt << " available validation layers." << std::endl;
 	for(const VkLayerProperties & currentLyrPrp : availableLayers)
@@ -92,14 +83,14 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
 	const char ** glfwRequiredVkInstanceExtensions = glfwGetRequiredInstanceExtensions(&glfwRequiredVkInstanceExtensionCnt);
 
 	handleGLFWResult( std::any_of(glfwRequiredVkInstanceExtensions,
-																glfwRequiredVkInstanceExtensions + glfwRequiredVkInstanceExtensionCnt,
-																[](const char * p_ExtName) -> bool {
-																	return !strcmp(VK_KHR_SURFACE_EXTENSION_NAME, p_ExtName);
-																}),
-										"Failed to get Vulkan instance extensions required by GLFW.");
+                                 glfwRequiredVkInstanceExtensions + glfwRequiredVkInstanceExtensionCnt,
+                                 [](const char * p_ExtName) -> bool {
+                                    return !strcmp(VK_KHR_SURFACE_EXTENSION_NAME, p_ExtName);
+                                 }),
+                     "Failed to get Vulkan instance extensions required by GLFW.");
 
-	std::vector<const char *> requiredVkInstanceExtensions( glfwRequiredVkInstanceExtensions,
-																													glfwRequiredVkInstanceExtensions + glfwRequiredVkInstanceExtensionCnt);
+	std::vector<const char *> requiredVkInstanceExtensions(  glfwRequiredVkInstanceExtensions,
+                                                            glfwRequiredVkInstanceExtensions + glfwRequiredVkInstanceExtensionCnt);
 
 	if(checkValidationSupport()) {
 		++glfwRequiredVkInstanceExtensionCnt;
@@ -119,21 +110,10 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
 	handleVKResult(res, "Failed to enumerate Vulkan instance extensions.");
 
 	ListChecker extPropsChecker;
-	extPropsChecker(extensionProperties, requiredVkInstanceExtensions,
-																						[](const VkExtensionProperties & p_t1) -> const char * {
-																							return p_t1.extensionName;
-																						});
-
-	// bool resultFlag = true, totalFlag;
-	// for(VkExtensionProperties extensionProp : extensionProperties) {
-	//   totalFlag = false;
-	//   if(std::any_of( requiredVkInstanceExtensions.begin(),
-	//                   requiredVkInstanceExtensions.end(),
-	//                   [&extensionProp](const VkExtensionProperties & p_ExtProp) -> bool {
-	//                     return !strcmp(extensionProp.extensionName, p_ExtProp.extensionName);
-	//                   })) totalFlag = true;
-	//   resultFlag &= totalFlag;
-	// }
+	extPropsChecker(  extensionProperties, requiredVkInstanceExtensions,
+                     [](const VkExtensionProperties & p_t1) -> const char * {
+                        return p_t1.extensionName;
+                     });
 
 	std::cerr << "Found " << extensionProperties.size() << " avilable extensions." << std::endl;
 	for(const VkExtensionProperties & currentExtProp : extensionProperties)
@@ -167,14 +147,14 @@ VkInstance & cVKInstanceManager::getInstance() noexcept {
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<_Tp> & p_Cont1, const std::vector<const char *> & p_Cont2,
-															const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func && p_Func) LC_NOEXCEPT {
 	;
 	this->operator()(p_Cont1, p_Cont2, std::move(p_Func), std::move(LAMBDA_INSTANCE_STRING_RETURNER));
 }
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<const char *> & p_Cont1, const std::vector<_Tp> & p_Cont2,
-															const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func && p_Func) LC_NOEXCEPT {
 	;
 	// _Tp, _Tp, lambda(const char * (*)(_Tp)), _Func
 	this->operator()(p_Cont1, p_Cont2, std::move(LAMBDA_INSTANCE_STRING_RETURNER), std::move(p_Func));
@@ -182,21 +162,21 @@ void ListChecker::operator()( const std::vector<const char *> & p_Cont1, const s
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<_Tp> & p_Cont1, const std::vector<_Tp> & p_Cont2,
-															const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func && p_Func) LC_NOEXCEPT {
 	;
 	this->operator()(p_Cont1, p_Cont2, std::move(p_Func), std::move(p_Func));
 }
 
 template <typename _Tp1, typename _Tp2, typename _Func1, typename _Func2>
 void ListChecker::operator()( const std::vector<_Tp1> & p_Cont1, const std::vector<_Tp2> & p_Cont2,
-															const _Func1 && p__Func1, const _Func2 && p__Func2) LC_NOEXCEPT {
+                              const _Func1 && p__Func1, const _Func2 && p__Func2) LC_NOEXCEPT {
 	;
 	this->value = std::all_of(p_Cont2.begin(), p_Cont2.end(),
 		[&p_Cont1, &p__Func1, &p__Func2](const _Tp2 & p_E2) -> bool {
-			return std::any_of( p_Cont1.begin(), p_Cont1.end(),
-													[&p_E2, &p__Func1, &p__Func2](const _Tp1 & p_E1) -> bool {
-														return !strcmp(p__Func1(p_E1), p__Func2(p_E2));
-													});
+			return std::any_of(  p_Cont1.begin(), p_Cont1.end(),
+                              [&p_E2, &p__Func1, &p__Func2](const _Tp1 & p_E1) -> bool {
+                                 return !strcmp(p__Func1(p_E1), p__Func2(p_E2));
+                              });
 	});
 	return;
 }

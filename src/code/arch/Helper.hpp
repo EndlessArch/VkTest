@@ -3,9 +3,13 @@
 
 #include "GLFWHelper.hpp"
 #include "GLFWWindowManager.hpp"
+
+#include "GLVK.hpp"
+
 #ifndef NDEBUG
 #include "VKDebugManager.hpp"
 #endif // NDEBUG
+#include "VKExceptionHandler.hpp"
 #include "VKInstanceManager.hpp"
 
 #endif
