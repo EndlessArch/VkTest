@@ -7,14 +7,28 @@ add_compile_options(-std=c++2a)
 
 # add_compile_options(-g) # dbg
 
-file(GLOB SOURCE_FILES "*.cpp" "./code/arch/*.cpp")
+file(GLOB SOURCE_FILES "*.cpp" "./src/code/arch/*.cpp")
 message("Found Source Files ${SOURCE_FILES}")
 
 add_executable(GraphicsTest ${SOURCE_FILES})
-target_include_directories(GraphicsTest PRIVATE ${CMAKE_SOURCE_DIR})
-target_include_directories(GraphicsTest PRIVATE /usr/local/Cellar/glfw/3.3.2/include)
-target_include_directories(GraphicsTest PRIVATE /usr/local/vulkansdk/macOS/include)
-target_link_libraries(GraphicsTest PRIVATE /usr/local/Cellar/glfw/3.3.2/lib/libglfw.3.3.dylib)
-target_link_libraries(GraphicsTest PRIVATE /usr/local/vulkansdk/macOS/lib/libvulkan.dylib)
-target_link_libraries(GraphicsTest PRIVATE /usr/local/vulkansdk/macOS/lib/libVkLayer_khronos_validation.dylib)
-target_link_libraries(GraphicsTest PRIVATE /usr/local/vulkansdk/macOS/lib/libVkLayer_api_dump.dylib)
+
+### -- REQUIRED -- ###
+set(GLFW_LIBRARY_DIR /usr/local/Cellar/glfw/3.3.2)
+set(VULKAN_DIR /usr/local/vulkansdk/macOS)
+
+set(VKLAYER_API_DUMP_FLAG TRUE)
+
+target_include_directories(GraphicsTest PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(GraphicsTest PRIVATE ${GLFW_LIBRARY_DIR}/include)
+target_include_directories(GraphicsTest PRIVATE ${VULKAN_DIR}/include)
+target_link_libraries(GraphicsTest PRIVATE ${GLFW_LIBRARY_DIR}/lib/libglfw.dylib)
+target_link_libraries(GraphicsTest PRIVATE ${VULKAN_DIR}/lib/libvulkan.dylib)
+target_link_libraries(GraphicsTest PRIVATE ${VULKAN_DIR}/lib/libVkLayer_khronos_validation.dylib)
+
+if(${VKLAYER_API_DUMP_FLAG})
+  message(STATUS "VkLayer_api_dump layer enabled.")
+  add_compile_definitions(ENABLE_VKLAYER_API_DUMP)
+  # target_link_libraries(GraphicsTest PRIVATE ${VULKAN_DIR}/lib/libVkLayer_api_dump.dylib) # segfault(signal 11)
+else()
+  message(STATUS "VkLayer_api_dump layer disabled.")
+endif()
