@@ -1,7 +1,7 @@
-#ifndef CODE_ARCH_VKDEBUGMANAGER_HPP
-#define CODE_ARCH_VKDEBUGMANAGER_HPP
+#ifndef SRC_CODE_ARCH_VKDEBUGMANAGER_HPP
+#define SRC_CODE_ARCH_VKDEBUGMANAGER_HPP
 
-#include "code/arch/GLVK.hpp"
+#include "src/code/arch/GLVK.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -19,10 +19,10 @@ class cVKDebugManager {
 public:
    void createDebugUtilsMessengerInfo(VkDebugUtilsMessengerCreateInfoEXT &) noexcept;
 
-   VkResult createDebugUtilsMessengerExt(const VkInstance &, const VkDebugUtilsMessengerCreateInfoEXT *, const VkAllocationCallbacks *);
-   void destroyDebugUtilsMessengerExt(const VkInstance &, const VkAllocationCallbacks *);
+   VkResult createDebugUtilsMessengerExt(const VkInstance &, const VkDebugUtilsMessengerCreateInfoEXT *, const VkAllocationCallbacks * = nullptr);
+   void destroyDebugUtilsMessengerExt(const VkInstance &, const VkAllocationCallbacks * = nullptr);
 
    VkDebugUtilsMessengerEXT & getDebugUtilsMessenger() noexcept;
 };
 
-#endif // CODE_ARCH_VKDEBUGMANAGER_HPP
+#endif // SRC_CODE_ARCH_VKDEBUGMANAGER_HPP

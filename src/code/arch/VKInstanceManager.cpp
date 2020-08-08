@@ -1,6 +1,6 @@
-#include "code/arch/VKInstanceManager.hpp"
+#include "src/code/arch/VKInstanceManager.hpp"
 
-#include "code/arch/VKExceptionHandler.hpp"
+#include "src/code/arch/VKExceptionHandler.hpp"
 
 // You can define 'VSCODE_LINTER' at editor|linter level.
 // this won't affect codes in compile-time,
@@ -42,8 +42,7 @@ cVKInstanceManager::cVKInstanceManager(VkInstanceCreateInfo & p_InstcInfo) {
    handleVKResult(res, "Failed to create Vulkan instance object.", "Created Vulkan instance object.");
 #ifndef NDEBUG
       res = this->m_DbgManager.createDebugUtilsMessengerExt((const VkInstance &)this->m_Instance,
-                                                            (const VkDebugUtilsMessengerCreateInfoEXT *)&dbgCreateInfo,
-                                                            (const VkAllocationCallbacks *)nullptr);
+                                                            (const VkDebugUtilsMessengerCreateInfoEXT *)&dbgCreateInfo);
       handleVKResult(res, "Failed to create Vulkan debug messenger.", "Created Vulkan debug messenger.");
 #endif
 }
@@ -51,7 +50,7 @@ cVKInstanceManager::cVKInstanceManager(VkInstanceCreateInfo & p_InstcInfo) {
 cVKInstanceManager::~cVKInstanceManager() {
    // All child objects should be destroyed first.
 #ifndef NDEBUG
-   this->m_DbgManager.destroyDebugUtilsMessengerExt((const VkInstance &)this->m_Instance, (const VkAllocationCallbacks *)nullptr);
+   this->m_DbgManager.destroyDebugUtilsMessengerExt((const VkInstance &)this->m_Instance);
 #endif
    vkDestroyInstance(this->m_Instance, nullptr);
 
@@ -62,14 +61,9 @@ cVKInstanceManager::~cVKInstanceManager() {
    std::cin.get();
 }
 
-const bool cVKInstanceManager::m_ValidationSupportFlag =
-#ifndef NDEBUG
-true;
-#else
-false;
-#endif
+constexpr bool cVKInstanceManager::m_ValidationSupportFlag;
 
-bool cVKInstanceManager::checkValidationSupport() noexcept {
+constexpr bool cVKInstanceManager::checkValidationSupport() noexcept {
    return m_ValidationSupportFlag; 
 }
 
@@ -180,7 +174,7 @@ template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<_Tp> & p_Cont1, const std::vector<_Tp> & p_Cont2,
                               const _Func && p_Func) LC_NOEXCEPT {
    ;
-   this->operator()(p_Cont1, p_Cont2, std::move(p_Func), std::move(p_Func));
+   this->operator()<_Tp, _Func>(p_Cont1, p_Cont2, std::move(p_Func), std::move(p_Func));
 }
 
 template <typename _Tp1, typename _Tp2, typename _Func1, typename _Func2>

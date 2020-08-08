@@ -1,8 +1,12 @@
-#include "code/arch/GLFWHelper.hpp"
+#include "src/code/arch/GLFWHelper.hpp"
 
 #include <GLFW/glfw3.h>
 
-#include "code/arch/VKDebugManager.hpp"
+#include "src/code/arch/VKDebugManager.hpp"
+// NOTE: In release, iostream won't be included in "VKDebugManager.hpp"
+#ifdef NDEBUG
+#include <iostream>
+#endif
 
 cGLFWHelper::cGLFWHelper() {
    this->m_FlagInitDeinit = false;
@@ -35,8 +39,8 @@ void cGLFWHelper::initWH() {
    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
    
 #ifdef __APPLE__
+   glfwWindowHint(GLFW_COCOA_CHDIR_RESOURCES, GL_TRUE);
    glfwWindowHint(GLFW_COCOA_MENUBAR, GL_TRUE);
-   // glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GL_TRUE);
 #endif
 
    // glfwWindowHint(GLFW_CURSOR)

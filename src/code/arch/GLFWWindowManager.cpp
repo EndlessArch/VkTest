@@ -1,8 +1,8 @@
-#include "code/arch/GLFWWindowManager.hpp"
+#include "src/code/arch/GLFWWindowManager.hpp"
 
 #include <GLFW/glfw3.h>
 
-#include "code/arch/VKDebugManager.hpp"
+#include "src/code/arch/VKDebugManager.hpp"
 
 cGLFWWindowManager::cGLFWWindowManager(int p_WindowWidth, int p_WindowHeight, const char * p_WindowTitle) {
    this->m_Window = glfwCreateWindow(p_WindowWidth, p_WindowHeight, p_WindowTitle, nullptr, nullptr);

@@ -1,15 +1,15 @@
-#ifndef CODE_ARCH_HELPER_HPP
-#define CODE_ARCH_HELPER_HPP
+#ifndef SRC_CODE_ARCH_HELPER_HPP
+#define SRC_CODE_ARCH_HELPER_HPP
 
-#include "code/arch/GLFWHelper.hpp"
-#include "code/arch/GLFWWindowManager.hpp"
+#include "src/code/arch/GLFWHelper.hpp"
+#include "src/code/arch/GLFWWindowManager.hpp"
 
-#include "code/arch/GLVK.hpp"
+#include "src/code/arch/GLVK.hpp"
 
 #ifndef NDEBUG
-#include "code/arch/VKDebugManager.hpp"
+#include "src/code/arch/VKDebugManager.hpp"
 #endif // NDEBUG
-#include "code/arch/VKExceptionHandler.hpp"
-#include "code/arch/VKInstanceManager.hpp"
+#include "src/code/arch/VKExceptionHandler.hpp"
+#include "src/code/arch/VKInstanceManager.hpp"
 
-#endif
+#endif // SRC_CODE_ARCH_HELPER_HPP

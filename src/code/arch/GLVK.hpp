@@ -1,7 +1,7 @@
-#ifndef CODE_ARCH_GLVK_HPP
-#define CODE_ARCH_GLVK_HPP
+#ifndef SRC_CODE_ARCH_GLVK_HPP
+#define SRC_CODE_ARCH_GLVK_HPP
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h> // also vulkan.h will be included.
 
-#endif // CODE_ARCH_GLVK_HPP
+#endif // SRC_CODE_ARCH_GLVK_HPP

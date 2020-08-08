@@ -1,4 +1,4 @@
-#include "VKExceptionHandler.hpp"
+#include "src/code/arch/VKExceptionHandler.hpp"
 
 void handleGLFWResult(bool p_ResultFlag, const char * p_FailedMsg, const char * p_SuccessMsg) noexcept {
    if(p_ResultFlag) {

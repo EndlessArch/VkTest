@@ -1,24 +1,27 @@
-#ifndef CODE_ARCH_VKINSTANCEMANAGER_HPP
-#define CODE_ARCH_VKINSTANCEMANAGER_HPP
+#ifndef SRC_CODE_ARCH_VKINSTANCEMANAGER_HPP
+#define SRC_CODE_ARCH_VKINSTANCEMANAGER_HPP
 
-#include "GLVK.hpp"
-#include "VKDebugManager.hpp"
+#include "src/code/arch/GLVK.hpp"
+#include "src/code/arch/VKDebugManager.hpp"
 
 #include <vector>
 
 class cVKInstanceManager {
    VkInstance m_Instance;
-   const static bool m_ValidationSupportFlag;
+   constexpr static bool m_ValidationSupportFlag = 
 
 #ifndef NDEBUG
+true;
    cVKDebugManager m_DbgManager;
+#else
+false;
 #endif
 
 public:
    cVKInstanceManager(VkInstanceCreateInfo &);
    ~cVKInstanceManager();
 
-   static bool checkValidationSupport() noexcept;
+   constexpr static bool checkValidationSupport() noexcept;
    static bool checkValidationLayers(const std::vector<const char *> &);
 
    static bool checkInstanceExtensions(std::vector<VkExtensionProperties> &);
@@ -32,10 +35,12 @@ public:
    return p_T; \
 })
 
+#include <type_traits>
+
 // Check if vector1 contains vector2
 struct ListChecker {
    bool value;
-#define LC_NOEXCEPT /*noexcept*/
+#define LC_NOEXCEPT /*noexcept*/ _NOEXCEPT // stl
    template <typename _Tp, typename _Func>
    void operator()(  const std::vector<_Tp> &, const std::vector<const char *> &,
                      const _Func &&) LC_NOEXCEPT;
@@ -54,4 +59,4 @@ struct ListChecker {
                      const _Func1 &&, const _Func2 &&) LC_NOEXCEPT;
 };
 
-#endif // CODE_ARCH_VKINSTANCEMANAGER_HPP
+#endif // SRC_CODE_ARCH_VKINSTANCEMANAGER_HPP

@@ -1,5 +1,5 @@
-#ifndef CODE_ARCH_GLFWHELPER_HPP
-#define CODE_ARCH_GLFWHELPER_HPP
+#ifndef SRC_CODE_ARCH_GLFWHELPER_HPP
+#define SRC_CODE_ARCH_GLFWHELPER_HPP
 
 #include "GLFWWindowManager.hpp"
 
@@ -18,12 +18,9 @@ public:
 
    void init();
 
-   /**
-    * @return The index number of current wm.
-    */
    int registerWindow(int, int, const char *) noexcept;
 
    cGLFWWindowManager & getWindowManager(int);
 };
 
-#endif // CODE_ARCH_GLFWHELPER_HPP
+#endif // SRC_CODE_ARCH_GLFWHELPER_HPP
