@@ -78,9 +78,6 @@ int main(int argc, char * argv[]) {
          std::cerr << "Aborting..." << std::endl;
          abort();
       }
-      // TODO: const char * = ... / Profiler
-      // std::transform( extensionProperties.begin(), extensionProperties.end(), std::back_inserter(extensionLayers),
-      //                 [](const VkExtensionProperties & p_ExtProp, ) -> void {});
    }
 
    cGLFWHelper glfwHelper; // init glfw

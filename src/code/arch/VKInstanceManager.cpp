@@ -1,6 +1,19 @@
 #include "code/arch/VKInstanceManager.hpp"
 
-#include "VKExceptionHandler.hpp"
+#include "code/arch/VKExceptionHandler.hpp"
+
+// You can define 'VSCODE_LINTER' at editor|linter level.
+// this won't affect codes in compile-time,
+#ifdef VSCODE_LINTER
+#define DONT_COMPILE(expression_) expression_
+#else
+#define DONT_COMPILE(expression_) /*nothing*/
+#endif
+
+// Stupid linter shows errors.
+// NOTE: default parameter cannot be redefined.
+extern void handleGLFWResult(bool, const char *, const char * DONT_COMPILE(= nullptr)) noexcept;
+extern void handleVKResult(const VkResult &, const char *, const char * DONT_COMPILE(= nullptr)) noexcept;
 
 #include <memory>
 
@@ -10,11 +23,15 @@ cVKInstanceManager::cVKInstanceManager(VkInstanceCreateInfo & p_InstcInfo) {
    p_InstcInfo.pNext = nullptr;
 
 #define APPLICATION_INF_PTR(P_INSTC) const_cast<VkApplicationInfo *>(P_INSTC.pApplicationInfo)
-   APPLICATION_INF_PTR(p_InstcInfo)->sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-   APPLICATION_INF_PTR(p_InstcInfo)->pNext = nullptr;
-   APPLICATION_INF_PTR(p_InstcInfo)->apiVersion = VK_API_VERSION_1_2; // VK_MAKE_VERSION(1, 2, 135); // = 1.2.135
-   APPLICATION_INF_PTR(p_InstcInfo)->engineVersion = VK_MAKE_VERSION(1, 0, 0);
-   APPLICATION_INF_PTR(p_InstcInfo)->pEngineName = "From Scratch";
+#define GET_INSTC_INF(get_) APPLICATION_INF_PTR(p_InstcInfo)->get_ // simplify.
+   GET_INSTC_INF(sType) = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+   GET_INSTC_INF(pNext) = nullptr;
+   GET_INSTC_INF(apiVersion) = VK_API_VERSION_1_2; // VK_MAKE_VERSION(1, 2, 135); // = 1.2.135
+   GET_INSTC_INF(engineVersion) = VK_MAKE_VERSION(1, 0, 0);
+   GET_INSTC_INF(pEngineName) = "From Scratch";
+
+#undef GET_INSTC_INF
+#undef APPLICATION_INF_PTR //
 
 #ifndef NDEBUG // this->m_DbgManager
       VkDebugUtilsMessengerCreateInfoEXT dbgCreateInfo;
@@ -41,7 +58,7 @@ cVKInstanceManager::~cVKInstanceManager() {
    std::cout << "Destroyed Vulkan instance object." << std::endl;
 
    ////
-   std::cout << "Press any key to continue...";
+   std::cout << "Press enter to continue...";
    std::cin.get();
 }
 
@@ -71,7 +88,7 @@ bool cVKInstanceManager::checkValidationLayers(const std::vector<const char *> &
                   return p_t2.layerName;
                }));
 
-   std::cerr << "Found " << availableLayerCnt << " available validation layers." << std::endl;
+   std::cerr << "Found " << availableLayerCnt << " available validation layer" << (availableLayerCnt < 2 ? "." : "s.") << std::endl;
    for(const VkLayerProperties & currentLyrPrp : availableLayers)
       std::cerr << "\t" << currentLyrPrp.layerName << std::endl;
 
@@ -97,7 +114,7 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
       requiredVkInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
    }
 
-   std::cerr << glfwRequiredVkInstanceExtensionCnt << " extensions required by GLFW." << std::endl;
+   std::cerr << glfwRequiredVkInstanceExtensionCnt << " extension" << (glfwRequiredVkInstanceExtensionCnt - 1 ? "s are" : " is") << " required by GLFW." << std::endl;
    for(const char * requiredVkExt : requiredVkInstanceExtensions)
       std::cerr << "\t" << requiredVkExt << std::endl;
 
