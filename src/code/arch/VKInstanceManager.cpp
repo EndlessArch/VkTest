@@ -61,10 +61,11 @@ cVKInstanceManager::~cVKInstanceManager() {
    std::cin.get();
 }
 
-constexpr bool cVKInstanceManager::m_ValidationSupportFlag;
+constexpr inline bool cVKInstanceManager::m_ValidationSupportFlag;
 
-constexpr bool cVKInstanceManager::checkValidationSupport() noexcept {
-   return m_ValidationSupportFlag; 
+auto cVKInstanceManager::checkValidationSupport() noexcept -> decltype(m_ValidationSupportFlag) {
+// constexpr bool cVKInstanceManager::checkValidationSupport() noexcept {
+   return m_ValidationSupportFlag;
 }
 
 bool cVKInstanceManager::checkValidationLayers(const std::vector<const char *> & validationLayers) {
@@ -95,9 +96,9 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
 
    handleGLFWResult( std::any_of(glfwRequiredVkInstanceExtensions,
                                  glfwRequiredVkInstanceExtensions + glfwRequiredVkInstanceExtensionCnt,
-                                 [](const char * p_ExtName) -> bool {
+                                 std::move([](const char * p_ExtName) -> bool {
                                     return !strcmp(VK_KHR_SURFACE_EXTENSION_NAME, p_ExtName);
-                                 }),
+                                 })),
                      "Failed to get Vulkan instance extensions required by GLFW.");
 
    std::vector<const char *> requiredVkInstanceExtensions(  glfwRequiredVkInstanceExtensions,
@@ -105,10 +106,10 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
 
    if(checkValidationSupport()) {
       ++glfwRequiredVkInstanceExtensionCnt;
-      requiredVkInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+      requiredVkInstanceExtensions.push_back(std::move(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
    }
 
-   std::cerr << glfwRequiredVkInstanceExtensionCnt << " extension" << (glfwRequiredVkInstanceExtensionCnt - 1 ? "s are" : " is") << " required by GLFW." << std::endl;
+   std::cerr << glfwRequiredVkInstanceExtensionCnt << " extension" << (glfwRequiredVkInstanceExtensionCnt < 2 ? " is" : "s are") << " required by GLFW." << std::endl;
    for(const char * requiredVkExt : requiredVkInstanceExtensions)
       std::cerr << "\t" << requiredVkExt << std::endl;
 
@@ -122,9 +123,9 @@ bool cVKInstanceManager::checkInstanceExtensions(std::vector<VkExtensionProperti
 
    ListChecker extPropsChecker;
    extPropsChecker(  extensionProperties, requiredVkInstanceExtensions,
-                     [](const VkExtensionProperties & p_t1) -> const char * {
+                     std::move([](const VkExtensionProperties & p_t1) -> const char * {
                         return p_t1.extensionName;
-                     });
+                     }));
 
    std::cerr << "Found " << extensionProperties.size() << " avilable extensions." << std::endl;
    for(const VkExtensionProperties & currentExtProp : extensionProperties)
@@ -158,35 +159,35 @@ VkInstance & cVKInstanceManager::getInstance() noexcept {
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<_Tp> & p_Cont1, const std::vector<const char *> & p_Cont2,
-                              const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func p_Func) LC_NOEXCEPT {
    ;
    this->operator()(p_Cont1, p_Cont2, std::move(p_Func), std::move(LAMBDA_INSTANCE_STRING_RETURNER));
 }
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<const char *> & p_Cont1, const std::vector<_Tp> & p_Cont2,
-                              const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func p_Func) LC_NOEXCEPT {
    ;
    this->operator()(p_Cont1, p_Cont2, std::move(LAMBDA_INSTANCE_STRING_RETURNER), std::move(p_Func));
 }
 
 template <typename _Tp, typename _Func>
 void ListChecker::operator()( const std::vector<_Tp> & p_Cont1, const std::vector<_Tp> & p_Cont2,
-                              const _Func && p_Func) LC_NOEXCEPT {
+                              const _Func p_Func) LC_NOEXCEPT {
    ;
-   this->operator()<_Tp, _Func>(p_Cont1, p_Cont2, std::move(p_Func), std::move(p_Func));
+   this->operator()<_Tp, _Func &&>(p_Cont1, p_Cont2, std::move(p_Func), std::move(p_Func));
 }
 
 template <typename _Tp1, typename _Tp2, typename _Func1, typename _Func2>
 void ListChecker::operator()( const std::vector<_Tp1> & p_Cont1, const std::vector<_Tp2> & p_Cont2,
-                              const _Func1 && p__Func1, const _Func2 && p__Func2) LC_NOEXCEPT {
+                              const _Func1 p__Func1, const _Func2 p__Func2) LC_NOEXCEPT {
    ;
    this->value = std::all_of(p_Cont2.begin(), p_Cont2.end(),
-      [&p_Cont1, &p__Func1, &p__Func2](const _Tp2 & p_E2) -> bool {
+      std::move([&p_Cont1, &p__Func1, &p__Func2](const _Tp2 & p_E2) -> bool {
          return std::any_of(  p_Cont1.begin(), p_Cont1.end(),
-                              [&p_E2, &p__Func1, &p__Func2](const _Tp1 & p_E1) -> bool {
+                              std::move([&p_E2, &p__Func1, &p__Func2](const _Tp1 & p_E1) -> bool {
                                  return !strcmp(p__Func1(p_E1), p__Func2(p_E2));
-                              });
-   });
+                              }));
+   }));
    return;
 }

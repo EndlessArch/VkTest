@@ -22,7 +22,7 @@ int execute_test(int argc, char * argv[]) {
    // appInfo.pEngineName = "From Scratch";
 
    // Vulkan validation layers
-   const static std::vector<const char *> validationLayers = {
+   static const std::vector<const char *> validationLayers = {
       "VK_LAYER_KHRONOS_validation" // normal validation
 #ifdef ENABLE_VKLAYER_API_DUMP // definition in cmake
       , "VK_LAYER_LUNARG_api_dump"
@@ -39,7 +39,7 @@ int execute_test(int argc, char * argv[]) {
       abort();
    }
 
-   const static std::vector<const char *> extensionLayers;
+   static const std::vector<const char *> extensionLayers;
 
    VkInstanceCreateInfo instanceInfo {};
    instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

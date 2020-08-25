@@ -13,7 +13,6 @@ void __SIGSEVHANDLER(int SIG) {
 
 #include "test/code/arch/VkTest.hpp"
 
-// TODO: src/ <- put cmake file to generate library.
 int main(int argc, char * argv[]) {
 
    // default settings.
